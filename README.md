@@ -1,6 +1,6 @@
 # sagile_mobile_main
 
-Mobile front-end for SAgile
+Mobile front-end for SAgile made using Flutter framework.
 
 ## Getting Started
 
