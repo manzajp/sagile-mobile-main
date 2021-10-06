@@ -1,10 +1,23 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:sagile_mobile_main/pages/calenderview.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:sagile_mobile_main/main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'network/api.dart';
+
+class LoginPage extends StatelessWidget {
+  const LoginPage({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.secondary,
+      body: Login(),
+    );
+  }
+}
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -20,81 +33,78 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.secondary,
-      body: SafeArea(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Padding(
-              padding: EdgeInsets.all(8.0),
-              child: CircleAvatar(),
-            ),
-            const Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Text('SAgile Mobile'),
-            ),
-            Form(
-              key: _formKey,
-              // cards
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  children: [
-                    ListTile(
-                      leading: Icon(
-                        Icons.email,
-                        color: Theme.of(context).primaryColor,
-                      ),
-                      title: TextFormField(
-                        decoration: const InputDecoration(
-                            focusedBorder: InputBorder.none,
-                            enabledBorder: InputBorder.none,
-                            errorBorder: InputBorder.none,
-                            focusedErrorBorder: InputBorder.none),
-                        keyboardType: TextInputType.emailAddress,
-                        validator: (emailValue) {
-                          if (emailValue!.isEmpty) {
-                            return 'Please enter your email!';
-                          }
-                          email = emailValue;
-                          return null;
-                        },
-                      ),
-                      tileColor: Colors.white,
+    return SafeArea(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Padding(
+            padding: EdgeInsets.all(8.0),
+            child: CircleAvatar(),
+          ),
+          const Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Text('SAgile Mobile'),
+          ),
+          Form(
+            key: _formKey,
+            // cards
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                children: [
+                  ListTile(
+                    leading: Icon(
+                      Icons.email,
+                      color: Theme.of(context).primaryColor,
                     ),
-                    ListTile(
-                      leading: Icon(
-                        Icons.lock,
-                        color: Theme.of(context).primaryColor,
-                      ),
-                      title: TextFormField(
-                        decoration: const InputDecoration(
-                            focusedBorder: InputBorder.none,
-                            enabledBorder: InputBorder.none,
-                            errorBorder: InputBorder.none,
-                            focusedErrorBorder: InputBorder.none),
-                        obscureText: true,
-                        validator: (pswdValue) {
-                          if (pswdValue!.isEmpty) {
-                            return 'Please enter your password!';
-                          }
-                          password = pswdValue;
-                          return null;
-                        },
-                      ),
-                      tileColor: Colors.white,
+                    title: TextFormField(
+                      decoration: const InputDecoration(
+                          focusedBorder: InputBorder.none,
+                          enabledBorder: InputBorder.none,
+                          errorBorder: InputBorder.none,
+                          focusedErrorBorder: InputBorder.none),
+                      keyboardType: TextInputType.emailAddress,
+                      validator: (emailValue) {
+                        if (emailValue!.isEmpty) {
+                          return 'Please enter your email!';
+                        }
+                        email = emailValue;
+                        return null;
+                      },
                     ),
-                  ],
-                ),
+                    tileColor: Colors.white,
+                  ),
+                  ListTile(
+                    leading: Icon(
+                      Icons.lock,
+                      color: Theme.of(context).primaryColor,
+                    ),
+                    title: TextFormField(
+                      decoration: const InputDecoration(
+                          focusedBorder: InputBorder.none,
+                          enabledBorder: InputBorder.none,
+                          errorBorder: InputBorder.none,
+                          focusedErrorBorder: InputBorder.none),
+                      obscureText: true,
+                      validator: (pswdValue) {
+                        if (pswdValue!.isEmpty) {
+                          return 'Please enter your password!';
+                        }
+                        password = pswdValue;
+                        return null;
+                      },
+                    ),
+                    tileColor: Colors.white,
+                  ),
+                ],
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8.0),
-              child: loading(),
-            ),
-          ],
-        ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8.0),
+            child: loading(),
+          ),
+        ],
       ),
     );
   }
@@ -104,8 +114,9 @@ class _LoginState extends State<Login> {
   Widget loading() {
     return FutureBuilder(builder: (context, snapshot) {
       if (_myDataState == 'Loaded') {
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => CalenderView()));
+        SchedulerBinding.instance!.addPostFrameCallback((_) {
+          Navigator.of(context).restorablePushNamed(SAgile.statusRoute);
+        });
       }
       if (_myDataState == 'Timeout') {
         return MaterialButton(
@@ -138,6 +149,8 @@ class _LoginState extends State<Login> {
   String? user;
 
   Future<void> _loads() async {
+    FocusScope.of(context).unfocus();
+
     if (_formKey.currentState!.validate()) {
       String? _curState = 'Loading';
 
@@ -168,6 +181,7 @@ class _LoginState extends State<Login> {
         user = jsonDecode(localStorage.getString('user').toString());
       }
     }
+    res = 'Loaded';
     return res;
   }
 }
