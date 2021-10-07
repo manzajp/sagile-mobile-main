@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "248602294113",
+    "project_id": "sagile-mobile",
+    "storage_bucket": "sagile-mobile.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:248602294113:android:d58fff32505e07b25cb720",
+        "android_client_info": {
+          "package_name": "com.example.sagile_mobile_main"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "248602294113-a7kcmmaamidvnjb287cfh00lprk36sku.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDmCjeP23vM-jmc9juf7XLc0YK5PnA-H14"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "248602294113-a7kcmmaamidvnjb287cfh00lprk36sku.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
