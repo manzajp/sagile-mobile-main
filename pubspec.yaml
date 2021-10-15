@@ -38,6 +38,7 @@ dependencies:
   http: ^0.13.3
   firebase_core: ^1.7.0
   firebase_messaging: ^10.0.8
+  flutter_neat_and_clean_calendar: ^0.2.3+11
 
 dev_dependencies:
   flutter_test:

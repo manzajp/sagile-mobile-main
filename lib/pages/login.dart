@@ -152,7 +152,8 @@ class _LoginState extends State<Login> {
     return FutureBuilder(builder: (context, snapshot) {
       if (_myDataState == 'Loaded') {
         SchedulerBinding.instance!.addPostFrameCallback((_) {
-          Navigator.of(context).restorablePushNamed(SAgile.statusRoute);
+          Navigator.of(context).restorablePushNamed(SAgile.calendarRoute);
+          // Navigator.of(context).restorablePushNamed(SAgile.statusRoute);
         });
       }
       if (_myDataState == 'Timeout') {
