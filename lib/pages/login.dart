@@ -4,7 +4,6 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:sagile_mobile_main/main.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import 'network/api.dart';
 
@@ -152,19 +151,24 @@ class _LoginState extends State<Login> {
     return FutureBuilder(builder: (context, snapshot) {
       if (_myDataState == 'Loaded') {
         SchedulerBinding.instance!.addPostFrameCallback((_) {
-          Navigator.of(context).restorablePushNamed(SAgile.calendarRoute);
-          // Navigator.of(context).restorablePushNamed(SAgile.statusRoute);
+          // Navigator.of(context).restorablePushNamed(SAgile.calendarRoute);
+          Navigator.of(context).restorablePushNamed(SAgile.statusRoute);
         });
       }
       if (_myDataState == 'Timeout') {
-        return MaterialButton(
-          color: Theme.of(context).backgroundColor,
-          shape: const CircleBorder(),
-          padding: const EdgeInsets.all(8.0),
-          child: const Icon(
-            Icons.refresh,
-          ),
-          onPressed: _loads,
+        return Column(
+          children: [
+            MaterialButton(
+              color: Theme.of(context).backgroundColor,
+              shape: const CircleBorder(),
+              padding: const EdgeInsets.all(8.0),
+              child: const Icon(
+                Icons.refresh,
+              ),
+              onPressed: _loads,
+            ),
+            const Text('Timed out!'),
+          ],
         );
       }
       if (_myDataState == 'Loading') {
@@ -191,7 +195,6 @@ class _LoginState extends State<Login> {
 
     if (_formKey.currentState!.validate()) {
       String? _curState = 'Loading';
-
       setState(() {
         _myDataState = _curState;
       });
@@ -203,23 +206,25 @@ class _LoginState extends State<Login> {
     }
   }
 
+  Future loginAuthData(data) async {
+    var res = await Network().authData(data, '/login');
+    var body = json.decode(res.body);
+    var success;
+    if (body['success']) {
+      // print(body['user'].toString());
+      // SharedPreferences localStorage = await SharedPreferences.getInstance();
+      // localStorage.setString('token', json.encode(body['token']));
+      // localStorage.setString('user', json.encode(body['user']));
+      // user = jsonDecode(localStorage.getString('user').toString());
+      success = 'Loaded';
+    }
+    return success;
+  }
+
   Future _login() async {
     var data = {'email': email, 'password': password};
-    var res = await Network()
-        .authData(data, '/login')
-        .timeout(const Duration(seconds: 5), onTimeout: () => 'Timeout');
-    // var res = await Network().authData(data, '/login');
-    if (res != 'Timeout') {
-      var body = json.decode(res.body);
-      res = 'Loaded';
-      if (body['success']) {
-        SharedPreferences localStorage = await SharedPreferences.getInstance();
-        localStorage.setString('token', json.encode(body['token']));
-        localStorage.setString('user', json.encode(body['user']));
-        user = jsonDecode(localStorage.getString('user').toString());
-      }
-    }
-    res = 'Loaded';
-    return res;
+
+    return await loginAuthData(data)
+        .timeout(const Duration(minutes: 1), onTimeout: () => 'Timeout');
   }
 }
