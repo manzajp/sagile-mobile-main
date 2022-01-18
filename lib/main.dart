@@ -19,7 +19,9 @@ class SAgile extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'SAgile Mobile',
-      theme: ThemeData(primarySwatch: Colors.green),
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
       home: homeWidget,
     );
   }

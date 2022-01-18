@@ -1,152 +1,100 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
-void main() {
-  runApp(new MyApp());
+class LoginWidget extends StatefulWidget {
+  const LoginWidget({Key? key}) : super(key: key);
+  @override
+  _LoginWidgetState createState() => _LoginWidgetState();
 }
-class MyApp extends StatelessWidget {
 
+class _LoginWidgetState extends State<LoginWidget> {
   @override
   Widget build(BuildContext context) {
-    return new MaterialApp(
-      title: 'Generated App',
-      theme: new ThemeData(
-        brightness:Brightness.dark,
-        primarySwatch: Colors.blue,
-        primaryColor: const Color(0xFF212121),
-        accentColor: const Color(0xFF64ffda),
-        canvasColor: const Color(0xFF303030),
-      ),
-      home: new MyHomePage(),
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key}) : super(key: key);
-  @override
-  _MyHomePageState createState() => new _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-    @override
-    Widget build(BuildContext context) {
-      return new Scaffold(
-        appBar: new AppBar(
-          title: new Text('App Name'),
-          ),
-        body:
-          new Column(
-            mainAxisAlignment: MainAxisAlignment.start,
+    return SafeArea(
+      child: Scaffold(
+        body: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             mainAxisSize: MainAxisSize.max,
             crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              new Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                mainAxisSize: MainAxisSize.max,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  new Container(
-                    child:
-                      new Text(
-                      "SAgile",
-                        style: new TextStyle(fontSize:50.0,
-                        color: const Color(0xFFffffff),
-                        fontWeight: FontWeight.w700,
-                        fontFamily: "Roboto"),
-                      ),
-    
-                    padding: const EdgeInsets.fromLTRB(1.0, 30.0, 1.0, 1.0),
-                    alignment: Alignment.center,
-                  )
-                ]
-    
+            children: [
+              Container(
+                child: Text(
+                  'SAgile',
+                  style: GoogleFonts.robotoCondensed(
+                    fontSize: 50.0,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                padding: const EdgeInsets.symmetric(vertical: 50),
+                alignment: Alignment.center,
               ),
-    
-              new Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                mainAxisSize: MainAxisSize.max,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  new Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.max,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      new Container(
-                        child:
-                          new TextField(
-                            style: new TextStyle(fontSize:12.0,
-                            color: const Color(0xFFffffff),
-                            fontWeight: FontWeight.w200,
-                            fontFamily: "Roboto"),
-                          ),
-    
-                        padding: const EdgeInsets.fromLTRB(1.0, 80.0, 1.0, 1.0),
-                        alignment: Alignment.center,
-                      ),
-    
-                      new Container(
-                        child:
-                          new TextField(
-                            style: new TextStyle(fontSize:12.0,
-                            color: const Color(0xFFffffff),
-                            fontWeight: FontWeight.w200,
-                            fontFamily: "Roboto"),
-                          ),
-    
-                        padding: const EdgeInsets.fromLTRB(1.0, 20.0, 1.0, 1.0),
-                        alignment: Alignment.center,
-                      ),
-    
-                      new FlatButton(key:null, onPressed:buttonPressed,
-                        child:
-                          new Text(
-                          "Login",
-                            style: new TextStyle(fontSize:14.0,
-                            color: const Color(0xFFffffff),
-                            fontWeight: FontWeight.w400,
-                            fontFamily: "Roboto"),
-                          )
+              Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.max,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Container(
+                      child: TextField(
+                        style: GoogleFonts.robotoCondensed(
+                            fontSize: 16.0, fontWeight: FontWeight.normal),
+                        decoration: const InputDecoration(
+                          labelText: 'Username',
+                          hintText: 'Enter your username here...',
                         ),
-    
-                      new Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        mainAxisSize: MainAxisSize.max,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: <Widget>[
-                          new Text(
-                          "Don’t have an account yet? ",
-                            style: new TextStyle(fontSize:12.0,
-                            color: const Color(0xFFffffff),
-                            fontWeight: FontWeight.w200,
-                            fontFamily: "Roboto"),
-                          ),
-    
-                          new FlatButton(key:null, onPressed:buttonPressed,
-                            child:
-                              new Text(
-                              "Register",
-                                style: new TextStyle(fontSize:12.0,
-                                color: const Color(0xFFffffff),
-                                fontWeight: FontWeight.w400,
-                                fontFamily: "Roboto"),
-                              )
-                            )
-                        ]
-    
-                      )
-                    ]
-    
-                  )
-                ]
-    
-              )
-            ]
-    
-          ),
-    
-      );
-    }
-    void buttonPressed(){}
-    
+                      ),
+                      padding: const EdgeInsets.symmetric(horizontal: 50),
+                      alignment: Alignment.center,
+                    ),
+                    Container(
+                      child: TextField(
+                        style: GoogleFonts.robotoCondensed(
+                            fontSize: 16.0, fontWeight: FontWeight.normal),
+                        decoration: const InputDecoration(
+                          labelText: 'Password',
+                          hintText: 'Enter your password here...',
+                        ),
+                        obscureText: true,
+                      ),
+                      padding: const EdgeInsets.symmetric(horizontal: 50),
+                      alignment: Alignment.center,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 25),
+                      child: TextButton(
+                          key: null,
+                          onPressed: buttonPressed,
+                          child: Text(
+                            "Login",
+                            style: GoogleFonts.robotoCondensed(
+                                fontSize: 14.0, fontWeight: FontWeight.normal),
+                          )),
+                    ),
+                  ]),
+              Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.max,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Don’t have an account yet? ",
+                      style: GoogleFonts.robotoCondensed(
+                          fontSize: 12.0, fontWeight: FontWeight.normal),
+                    ),
+                    TextButton(
+                        key: null,
+                        onPressed: buttonPressed,
+                        child: const Text(
+                          "Register",
+                          style: TextStyle(
+                              fontSize: 12.0,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: "Roboto"),
+                        ))
+                  ])
+            ]),
+      ),
+    );
+  }
+
+  void buttonPressed() {}
 }
