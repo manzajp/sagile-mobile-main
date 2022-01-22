@@ -8,8 +8,8 @@ Widget registerPage = const RegisterWidget();
 Widget taskcreatePage = const TaskCreateWidget();
 
 // Widget homePage = loginPage;
-// Widget homePage = registerPage;
-Widget homePage = taskcreatePage;
+Widget homePage = registerPage;
+// Widget homePage = taskcreatePage;
 
 void main() {
   runApp(const SAgile());
