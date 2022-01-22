@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
-// import 'package:sagile_mobile_main/pages/login_application.dart';
-
-// Widget homeWidget = const LoginWidget();
-
+import 'package:sagile_mobile_main/pages/create_task_application.dart';
+import 'package:sagile_mobile_main/pages/login_application.dart';
 import 'package:sagile_mobile_main/pages/register_application.dart';
 
-Widget homeWidget = const RegisterWidget();
+Widget loginPage = const LoginWidget();
+Widget registerPage = const RegisterWidget();
+Widget taskcreatePage = const TaskCreateWidget();
+
+// Widget homePage = loginPage;
+// Widget homePage = registerPage;
+Widget homePage = taskcreatePage;
 
 void main() {
   runApp(const SAgile());
@@ -22,7 +26,7 @@ class SAgile extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: homeWidget,
+      home: homePage,
     );
   }
 }
