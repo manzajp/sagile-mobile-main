@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class User {
@@ -98,7 +97,7 @@ class _RegisterWidgetState extends State<RegisterWidget> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Container(
-                      child: TextField(
+                      child: TextFormField(
                         controller: usernameController,
                         style: GoogleFonts.robotoCondensed(
                             fontSize: 16.0, fontWeight: FontWeight.normal),
@@ -111,7 +110,7 @@ class _RegisterWidgetState extends State<RegisterWidget> {
                       alignment: Alignment.center,
                     ),
                     Container(
-                      child: TextField(
+                      child: TextFormField(
                         controller: emailController,
                         style: GoogleFonts.robotoCondensed(
                             fontSize: 16.0, fontWeight: FontWeight.normal),
@@ -124,7 +123,7 @@ class _RegisterWidgetState extends State<RegisterWidget> {
                       alignment: Alignment.center,
                     ),
                     Container(
-                      child: TextField(
+                      child: TextFormField(
                         controller: passwordController,
                         style: GoogleFonts.robotoCondensed(
                             fontSize: 16.0, fontWeight: FontWeight.normal),
@@ -138,7 +137,7 @@ class _RegisterWidgetState extends State<RegisterWidget> {
                       alignment: Alignment.center,
                     ),
                     Container(
-                      child: TextField(
+                      child: TextFormField(
                         controller: confirmpwController,
                         style: GoogleFonts.robotoCondensed(
                             fontSize: 16.0, fontWeight: FontWeight.normal),
