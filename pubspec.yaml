@@ -38,6 +38,7 @@ dependencies:
   http: ^0.13.3
   flutter_neat_and_clean_calendar: ^0.2.3+11
   google_fonts: ^2.2.0
+  flutter_datetime_picker: ^1.5.1
 
 dev_dependencies:
   flutter_test:
