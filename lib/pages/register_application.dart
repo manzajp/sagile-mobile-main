@@ -98,7 +98,7 @@ class _RegisterWidgetState extends State<RegisterWidget> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Container(
-                      child: TextField(
+                      child: TextFormField(
                         controller: usernameController,
                         style: GoogleFonts.robotoCondensed(
                             fontSize: 16.0, fontWeight: FontWeight.normal),
@@ -111,7 +111,7 @@ class _RegisterWidgetState extends State<RegisterWidget> {
                       alignment: Alignment.center,
                     ),
                     Container(
-                      child: TextField(
+                      child: TextFormField(
                         controller: emailController,
                         style: GoogleFonts.robotoCondensed(
                             fontSize: 16.0, fontWeight: FontWeight.normal),
@@ -124,7 +124,7 @@ class _RegisterWidgetState extends State<RegisterWidget> {
                       alignment: Alignment.center,
                     ),
                     Container(
-                      child: TextField(
+                      child: TextFormField(
                         controller: passwordController,
                         style: GoogleFonts.robotoCondensed(
                             fontSize: 16.0, fontWeight: FontWeight.normal),
@@ -138,7 +138,7 @@ class _RegisterWidgetState extends State<RegisterWidget> {
                       alignment: Alignment.center,
                     ),
                     Container(
-                      child: TextField(
+                      child: TextFormField(
                         controller: confirmpwController,
                         style: GoogleFonts.robotoCondensed(
                             fontSize: 16.0, fontWeight: FontWeight.normal),
