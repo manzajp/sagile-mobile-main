@@ -9,7 +9,11 @@ class User {
   final String email;
   final String password;
 
-  User({required this.id,required this.username,required this.email,required this.password});
+  User(
+      {required this.id,
+      required this.username,
+      required this.email,
+      required this.password});
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
@@ -20,17 +24,15 @@ class User {
     );
   }
   Map<String, dynamic> toJson() => {
-    'username': username,
-    'email': email,
-    'password': password,
-  };
-
+        'username': username,
+        'email': email,
+        'password': password,
+      };
 }
 
 class Env {
-  static String URL_PREFIX = "http://192.168.68.109/flutter_api";
+  static String URL_PREFIX = "http://manza.lan/flutter_api";
 }
-
 
 class RegisterWidget extends StatefulWidget {
   const RegisterWidget({Key? key}) : super(key: key);
@@ -51,7 +53,7 @@ class _RegisterWidgetState extends State<RegisterWidget> {
   // Http post request to create new data
   Future _createUser() async {
     return await http.post(
-    Uri.parse("${Env.URL_PREFIX}/create.php"),
+      Uri.parse("${Env.URL_PREFIX}/create.php"),
       body: {
         "username": usernameController.text,
         "email": emailController.text,
@@ -68,7 +70,6 @@ class _RegisterWidgetState extends State<RegisterWidget> {
     //   .pushNamedAndRemoveUntil('/'
     //   , (Route<dynamic> route) => false);
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -151,9 +152,9 @@ class _RegisterWidgetState extends State<RegisterWidget> {
                       alignment: Alignment.center,
                     ),
                     ElevatedButton(
-                        onPressed: (){
+                        onPressed: () {
                           if (formKey.currentState!.validate()) {
-                          _onConfirm(context);
+                            _onConfirm(context);
                           }
                         },
                         child: Text(
@@ -190,6 +191,5 @@ class _RegisterWidgetState extends State<RegisterWidget> {
     );
   }
 
-  void buttonPressed() {
-  }
+  void buttonPressed() {}
 }
