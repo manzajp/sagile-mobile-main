@@ -1,37 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
-
-class User {
-  final int id;
-  final String username;
-  final String email;
-  final String password;
-
-  User(
-      {required this.id,
-      required this.username,
-      required this.email,
-      required this.password});
-
-  factory User.fromJson(Map<String, dynamic> json) {
-    return User(
-      id: json['id'],
-      username: json['username'],
-      email: json['email'],
-      password: json['password'],
-    );
-  }
-  Map<String, dynamic> toJson() => {
-        'username': username,
-        'email': email,
-        'password': password,
-      };
-}
-
-class Env {
-  static String URL_PREFIX = "http://manza.lan/flutter_api";
-}
+import '../static.dart';
 
 class RegisterWidget extends StatefulWidget {
   const RegisterWidget({Key? key}) : super(key: key);
@@ -52,7 +22,7 @@ class _RegisterWidgetState extends State<RegisterWidget> {
   // Http post request to create new data
   Future _createUser() async {
     return await http.post(
-      Uri.parse("${Env.URL_PREFIX}/create.php"),
+      Uri.parse("${Env.URL_PREFIX}/users/create.php"),
       body: {
         "username": usernameController.text,
         "email": emailController.text,
@@ -61,13 +31,18 @@ class _RegisterWidgetState extends State<RegisterWidget> {
     );
   }
 
-  void _onConfirm(context) async {
-    await _createUser();
+  Future _getUser() async {
+    return await http.post(
+      Uri.parse("${Env.URL_PREFIX}/users/detail.php"),
+      body: {
+        "username": usernameController.text,
+      },
+    );
+  }
+
+  void _onCreate(context) async {
+    await _getUser().then(await _createUser());
     print("received respond!");
-    // Remove all existing routes until the Home.dart, then rebuild Home.
-    // Navigator.of(context)
-    //   .pushNamedAndRemoveUntil('/'
-    //   , (Route<dynamic> route) => false);
   }
 
   @override
@@ -98,20 +73,20 @@ class _RegisterWidgetState extends State<RegisterWidget> {
                   children: [
                     Container(
                       child: TextFormField(
-                        controller: usernameController,
-                        style: GoogleFonts.robotoCondensed(
-                            fontSize: 16.0, fontWeight: FontWeight.normal),
-                        decoration: const InputDecoration(
-                          labelText: 'Username',
-                          hintText: 'Enter your username here...',
-                        ),
-                        validator: (username){
-                          if(username!.length < 8){
-                            return 'Username must be more than 7 character!';
-                          }
-                          return null;
-                        }
-                      ),
+                          controller: usernameController,
+                          style: GoogleFonts.robotoCondensed(
+                              fontSize: 16.0, fontWeight: FontWeight.normal),
+                          decoration: const InputDecoration(
+                            labelText: 'Username',
+                            hintText: 'Enter your username here...',
+                          ),
+                          validator: (username) {
+                            if (username!.length < 8) {
+                              return 'Username must be more than 7 character!';
+                            }
+
+                            return null;
+                          }),
                       padding: const EdgeInsets.symmetric(horizontal: 50),
                       alignment: Alignment.center,
                     ),
@@ -124,13 +99,13 @@ class _RegisterWidgetState extends State<RegisterWidget> {
                           labelText: 'Email Address',
                           hintText: 'Enter your email address here...',
                         ),
-                        validator: (email){
-                          RegExp regex = RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
-                          if(!regex.hasMatch(email!)){
-                            return 'Invalid email format!';
-                          }
-                          else if(email!.isEmpty){
+                        validator: (email) {
+                          RegExp regex = RegExp(
+                              r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
+                          if (email!.isEmpty) {
                             return 'Please enter your email address!';
+                          } else if (!regex.hasMatch(email!)) {
+                            return 'Invalid email format!';
                           }
                           return null;
                         },
@@ -148,8 +123,8 @@ class _RegisterWidgetState extends State<RegisterWidget> {
                           hintText: 'Enter your password here...',
                         ),
                         obscureText: true,
-                        validator: (password){
-                          if(password!.isEmpty){
+                        validator: (password) {
+                          if (password!.isEmpty) {
                             return 'Please enter a password!';
                           }
                           // passwordController.text = password;
@@ -169,8 +144,8 @@ class _RegisterWidgetState extends State<RegisterWidget> {
                           hintText: 'Re-enter your password here...',
                         ),
                         obscureText: true,
-                        validator: (confirm){
-                          if(confirm != passwordController.text){
+                        validator: (confirm) {
+                          if (confirm != passwordController.text) {
                             return 'Your password doesn\'t match!';
                           }
                           return null;
@@ -182,7 +157,7 @@ class _RegisterWidgetState extends State<RegisterWidget> {
                     ElevatedButton(
                         onPressed: () {
                           if (formKey.currentState!.validate()) {
-                            _onConfirm(context);
+                            _onCreate(context);
                           }
                         },
                         child: Text(
