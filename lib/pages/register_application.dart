@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
+import 'package:sagile_mobile_main/model/user.dart';
 import '../static.dart';
 
 class RegisterWidget extends StatefulWidget {
@@ -21,33 +24,49 @@ class _RegisterWidgetState extends State<RegisterWidget> {
 
   // Http post request to create new data
   Future _createUser() async {
-    return await http.post(
-      Uri.parse("${Env.URL_PREFIX}/users/create.php"),
+    final res = await http.post(
+      Uri.parse("${Env.URL_PREFIX}/users/details.php"),
       body: {
         "username": usernameController.text,
-        "email": emailController.text,
-        "password": passwordController.text,
       },
     );
-  }
+    var result = json.decode(res.body)['result'];
+    if (result == false) {
+      setState(() {
+        usernameDuplicate = false;
+        formKey.currentState!.validate();
+      });
+      print('haha acc go brr brr');
 
-  Future _getUser() async {
-    return await http.post(
-      Uri.parse("${Env.URL_PREFIX}/users/detail.php"),
-      body: {
-        "username": usernameController.text,
-      },
-    );
+      // Create a new User entry
+      return await http.post(
+        Uri.parse("${Env.URL_PREFIX}/users/create.php"),
+        body: {
+          "username": usernameController.text,
+          "email": emailController.text,
+          "password": passwordController.text,
+        },
+      );
+    } else {
+      setState(() {
+        usernameDuplicate = true;
+        formKey.currentState!.validate();
+      });
+      print('haha acc exists');
+    }
   }
 
   void _onCreate(context) async {
-    await _getUser().then(await _createUser());
+    await _createUser();
     print("received respond!");
   }
+
+  bool usernameDuplicate = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           mainAxisSize: MainAxisSize.max,
@@ -83,8 +102,10 @@ class _RegisterWidgetState extends State<RegisterWidget> {
                           validator: (username) {
                             if (username!.length < 8) {
                               return 'Username must be more than 7 character!';
+                            } else if (usernameDuplicate == true) {
+                              usernameDuplicate = false;
+                              return 'Username already in use!';
                             }
-
                             return null;
                           }),
                       padding: const EdgeInsets.symmetric(horizontal: 50),
@@ -104,7 +125,7 @@ class _RegisterWidgetState extends State<RegisterWidget> {
                               r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
                           if (email!.isEmpty) {
                             return 'Please enter your email address!';
-                          } else if (!regex.hasMatch(email!)) {
+                          } else if (!regex.hasMatch(email)) {
                             return 'Invalid email format!';
                           }
                           return null;
@@ -156,6 +177,7 @@ class _RegisterWidgetState extends State<RegisterWidget> {
                     ),
                     ElevatedButton(
                         onPressed: () {
+                          FocusScope.of(context).unfocus();
                           if (formKey.currentState!.validate()) {
                             _onCreate(context);
                           }
