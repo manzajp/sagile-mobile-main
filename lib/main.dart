@@ -7,8 +7,8 @@ Widget loginPage = const LoginWidget();
 Widget registerPage = const RegisterWidget();
 Widget taskcreatePage = const TaskCreateWidget();
 
-// Widget homePage = loginPage;
-Widget homePage = registerPage;
+Widget homePage = loginPage;
+// Widget homePage = registerPage;
 // Widget homePage = taskcreatePage;
 
 void main() {
