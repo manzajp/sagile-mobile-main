@@ -105,6 +105,12 @@ class _RegisterWidgetState extends State<RegisterWidget> {
                           labelText: 'Username',
                           hintText: 'Enter your username here...',
                         ),
+                        validator: (username){
+                          if(username!.length < 8){
+                            return 'Username must be more than 7 character!';
+                          }
+                          return null;
+                        }
                       ),
                       padding: const EdgeInsets.symmetric(horizontal: 50),
                       alignment: Alignment.center,
@@ -118,6 +124,16 @@ class _RegisterWidgetState extends State<RegisterWidget> {
                           labelText: 'Email Address',
                           hintText: 'Enter your email address here...',
                         ),
+                        validator: (email){
+                          RegExp regex = RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
+                          if(!regex.hasMatch(email!)){
+                            return 'Invalid email format!';
+                          }
+                          else if(email!.isEmpty){
+                            return 'Please enter your email address!';
+                          }
+                          return null;
+                        },
                       ),
                       padding: const EdgeInsets.symmetric(horizontal: 50),
                       alignment: Alignment.center,
@@ -132,6 +148,13 @@ class _RegisterWidgetState extends State<RegisterWidget> {
                           hintText: 'Enter your password here...',
                         ),
                         obscureText: true,
+                        validator: (password){
+                          if(password!.isEmpty){
+                            return 'Please enter a password!';
+                          }
+                          // passwordController.text = password;
+                          return null;
+                        },
                       ),
                       padding: const EdgeInsets.symmetric(horizontal: 50),
                       alignment: Alignment.center,
@@ -143,9 +166,15 @@ class _RegisterWidgetState extends State<RegisterWidget> {
                             fontSize: 16.0, fontWeight: FontWeight.normal),
                         decoration: const InputDecoration(
                           labelText: 'Confirm Password',
-                          hintText: 'Enter your password here...',
+                          hintText: 'Re-enter your password here...',
                         ),
                         obscureText: true,
+                        validator: (confirm){
+                          if(confirm != passwordController.text){
+                            return 'Your password doesn\'t match!';
+                          }
+                          return null;
+                        },
                       ),
                       padding: const EdgeInsets.symmetric(horizontal: 50),
                       alignment: Alignment.center,
