@@ -24,41 +24,46 @@ class _RegisterWidgetState extends State<RegisterWidget> {
 
   // Http post request to create new data
   Future _createUser() async {
-    final res = await http.post(
-      Uri.parse("${Env.URL_PREFIX}/users/details.php"),
-      body: {
-        "username": usernameController.text,
-      },
-    );
-    var result = json.decode(res.body)['result'];
-    if (result == false) {
-      setState(() {
-        usernameDuplicate = false;
-        formKey.currentState!.validate();
-      });
-      print('haha acc go brr brr');
-
-      // Create a new User entry
-      return await http.post(
-        Uri.parse("${Env.URL_PREFIX}/users/create.php"),
+    try {
+      final res = await http.post(
+        Uri.parse("${Env.URL_PREFIX}/users/details.php"),
         body: {
           "username": usernameController.text,
-          "email": emailController.text,
-          "password": passwordController.text,
         },
       );
-    } else {
-      setState(() {
-        usernameDuplicate = true;
-        formKey.currentState!.validate();
-      });
-      print('haha acc exists');
+      var result = json.decode(res.body)['result'];
+      if (result == false) {
+        setState(() {
+          usernameDuplicate = false;
+          formKey.currentState!.validate();
+        });
+        print('haha acc go brr brr');
+      
+        // Create a new User entry
+        return await http.post(
+          Uri.parse("${Env.URL_PREFIX}/users/create.php"),
+          body: {
+            "username": usernameController.text,
+            "email": emailController.text,
+            "password": passwordController.text,
+          },
+        );
+      } else {
+        setState(() {
+          usernameDuplicate = true;
+          formKey.currentState!.validate();
+        });
+        print('haha acc exists');
+      }
+      print("received respond!");
+    } on Exception catch (e) {
+      // TODO
+      print('no server bro');
     }
   }
 
   void _onCreate(context) async {
     await _createUser();
-    print("received respond!");
   }
 
   bool usernameDuplicate = false;
