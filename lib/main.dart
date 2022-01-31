@@ -9,10 +9,10 @@ Widget registerPage = const RegisterWidget();
 Widget taskcreatePage = const TaskCreateWidget();
 Widget taskviewPage = const TaskViewWidget();
 
-// Widget homePage = loginPage;
+Widget homePage = loginPage;
 // Widget homePage = registerPage;
 // Widget homePage = taskcreatePage;
-Widget homePage = taskviewPage;
+// Widget homePage = taskviewPage;
 
 void main() {
   runApp(const SAgile());
@@ -29,7 +29,25 @@ class SAgile extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: homePage,
+      home: const TaskViewWidget(),
+      initialRoute: '/login',
+      routes: {
+        '/login': (context) => const LoginWidget(),
+        '/taskView': (context) => const TaskViewWidget(),
+        '/taskCreate': (context) => const TaskCreateWidget(),
+      },
     );
   }
+
+  // Route<dynamic>? _getRoute(RouteSettings settings) {
+  //   if (settings.name != '/login') {
+  //     return null;
+  //   }
+
+  //   return MaterialPageRoute<void>(
+  //     settings: settings,
+  //     builder: (BuildContext context) => const LoginWidget(),
+  //     fullscreenDialog: true,
+  //   );
+  // }
 }

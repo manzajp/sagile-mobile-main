@@ -36,21 +36,18 @@ class _TaskViewWidgetState extends State<TaskViewWidget>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         toolbarHeight: 70,
         title: const Text('SAgile'),
         actions: [
-          ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                shape: const CircleBorder(),
-                elevation: 0,
-              ),
-              onPressed: () {},
-              child: const Padding(
-                padding: EdgeInsets.only(left: 5),
-                child: Icon(
-                  Icons.logout,
-                  color: Colors.white,
-                ),
+          IconButton(
+              onPressed: () {
+                Navigator.pushNamed(context, '/login');
+                // TODO: Confirmation dialog (Yes, Yesn't)
+              },
+              icon: const Icon(
+                Icons.logout,
+                color: Colors.white,
               )),
         ],
         bottom: TabBar(
@@ -172,30 +169,52 @@ class _TaskViewWidgetState extends State<TaskViewWidget>
           ),
           Column(
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(left: 10),
-                    child: Text(
-                      "Task 1",
-                      style: GoogleFonts.robotoCondensed(
-                          fontSize: 16.0, fontWeight: FontWeight.normal),
-                    ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                child: Card(
+                  child: ExpansionTile(
+                    expandedCrossAxisAlignment: CrossAxisAlignment.start,
+                    title: Text('Task 3'),
+                    children: [
+                      const Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 30.0),
+                        child: Divider(
+                          thickness: 1,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 15.0, horizontal: 15.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: const [
+                            Text('something cool'),
+                            Text('something cool herre too'),
+                          ],
+                        ),
+                      )
+                    ],
+                    trailing: Checkbox(
+                        value: task2Check,
+                        onChanged: (value) {
+                          setState(() {
+                            task2Check = value!;
+                          });
+                        }),
                   ),
-                  Checkbox(
-                      value: task3Check,
-                      onChanged: (value) {
-                        setState(() {
-                          task3Check = value!;
-                        });
-                      }),
-                ],
+                ),
               ),
             ],
           ),
         ],
       ),
+      floatingActionButton: FloatingActionButton(
+        child: const Icon(Icons.add),
+        onPressed: () {
+          Navigator.pushNamed(context, '/taskCreate');
+        },
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 }

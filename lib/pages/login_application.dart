@@ -29,20 +29,31 @@ class _LoginWidgetState extends State<LoginWidget> {
         },
       );
       var result = json.decode(res.body)['result'];
-      if (result == true) {
+      print(result);
+
+      if (result == false) {
         setState(() {
+          userNotExist = true;
           formKey.currentState!.validate();
         });
-        print(result);
-        print('bruh da login tahniah');
-      
+        print('bruh acc xdoi pun - no user');
       } else {
-        setState(() {
-          formKey.currentState!.validate();
-        });
-        print('bruh acc xdoi pun - wrong user/pw');
+        if (passwordController.text == result['password']) {
+          wrongPassword = false;
+          setState(() {
+            formKey.currentState!.validate();
+          });
+          print('bruh da login tahniah');
+          Navigator.pop(context);
+        } else {
+          wrongPassword = true;
+          setState(() {
+            formKey.currentState!.validate();
+          });
+          print('bruh wrong pass');
+        }
       }
-      print("received respond!"); 
+      print("received respond!");
     } on Exception catch (e) {
       // TODO
       print('no server 404 nig-');
@@ -52,6 +63,9 @@ class _LoginWidgetState extends State<LoginWidget> {
   void _onLogIn(context) async {
     await _detailsUser();
   }
+
+  bool wrongPassword = false;
+  bool userNotExist = false;
 
   @override
   Widget build(BuildContext context) {
@@ -89,9 +103,11 @@ class _LoginWidgetState extends State<LoginWidget> {
                             labelText: 'Username',
                             hintText: 'Enter your username here...',
                           ),
-                          validator: (username){
-                            if (username!.length < 8) {
-                              return 'Username must be more than 7 character!';
+                          validator: (username) {
+                            if (username!.isEmpty) {
+                              return 'Please enter a username!';
+                            } else if (userNotExist) {
+                              return 'User does not exist!';
                             }
                             return null;
                           },
@@ -112,6 +128,8 @@ class _LoginWidgetState extends State<LoginWidget> {
                           validator: (password) {
                             if (password!.isEmpty) {
                               return 'Please enter a password!';
+                            } else if (wrongPassword) {
+                              return 'Wrong password!';
                             }
                             return null;
                           },
@@ -122,7 +140,9 @@ class _LoginWidgetState extends State<LoginWidget> {
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 25),
                         child: ElevatedButton(
-                            onPressed: (){
+                            onPressed: () {
+                              userNotExist = false;
+                              wrongPassword = false;
                               if (formKey.currentState!.validate()) {
                                 _onLogIn(context);
                               }
@@ -130,7 +150,8 @@ class _LoginWidgetState extends State<LoginWidget> {
                             child: Text(
                               "Login",
                               style: GoogleFonts.robotoCondensed(
-                                  fontSize: 14.0, fontWeight: FontWeight.normal),
+                                  fontSize: 14.0,
+                                  fontWeight: FontWeight.normal),
                             )),
                       ),
                     ]),
