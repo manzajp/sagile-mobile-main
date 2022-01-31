@@ -34,7 +34,7 @@ class _EditTaskWidgetState extends State<EditTaskWidget> {
       );
       var result = json.decode(res.body)['result'];
 
-      if(result == false){
+      if(result == true){
         setState((){
           formKey.currentState!.validate();
         });
@@ -103,6 +103,7 @@ class _EditTaskWidgetState extends State<EditTaskWidget> {
                                     fontSize: 16.0,
                                     fontWeight: FontWeight.normal),
                               ),
+                              TextFormField(initialValue: "#"),
                               TextField(
                                 controller: taskNameController,
                                 style: GoogleFonts.robotoCondensed(
@@ -126,6 +127,7 @@ class _EditTaskWidgetState extends State<EditTaskWidget> {
                                     fontSize: 16.0,
                                     fontWeight: FontWeight.normal),
                               ),
+                              TextFormField(initialValue: "#"),
                               TextField(
                                 controller: taskDescController,
                                 maxLines: 3,
