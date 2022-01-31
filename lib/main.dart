@@ -33,6 +33,7 @@ class SAgile extends StatelessWidget {
       initialRoute: '/login',
       routes: {
         '/login': (context) => const LoginWidget(),
+        '/register': (context) => const RegisterWidget(),
         '/taskView': (context) => const TaskViewWidget(),
         '/taskCreate': (context) => const TaskCreateWidget(),
       },

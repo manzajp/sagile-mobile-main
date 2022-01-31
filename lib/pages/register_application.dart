@@ -37,10 +37,9 @@ class _RegisterWidgetState extends State<RegisterWidget> {
           usernameDuplicate = false;
           formKey.currentState!.validate();
         });
-        print('haha acc go brr brr');
-      
+
         // Create a new User entry
-        return await http.post(
+        await http.post(
           Uri.parse("${Env.URL_PREFIX}/users/create.php"),
           body: {
             "username": usernameController.text,
@@ -48,6 +47,8 @@ class _RegisterWidgetState extends State<RegisterWidget> {
             "password": passwordController.text,
           },
         );
+        print('haha acc go brr brr');
+        Navigator.pop(context);
       } else {
         setState(() {
           usernameDuplicate = true;
@@ -73,153 +74,153 @@ class _RegisterWidgetState extends State<RegisterWidget> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          mainAxisSize: MainAxisSize.max,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Container(
-              child: Text(
-                'SAgile',
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        mainAxisSize: MainAxisSize.max,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Container(
+            child: Text(
+              'SAgile',
+              style: GoogleFonts.robotoCondensed(
+                fontSize: 50.0,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            padding: const EdgeInsets.symmetric(vertical: 50),
+            alignment: Alignment.center,
+          ),
+          Form(
+            key: formKey,
+            child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisSize: MainAxisSize.max,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Container(
+                    child: TextFormField(
+                        controller: usernameController,
+                        style: GoogleFonts.robotoCondensed(
+                            fontSize: 16.0, fontWeight: FontWeight.normal),
+                        decoration: const InputDecoration(
+                          labelText: 'Username',
+                          hintText: 'Enter your username here...',
+                        ),
+                        validator: (username) {
+                          if (username!.length < 8) {
+                            return 'Username must be more than 7 character!';
+                          } else if (usernameDuplicate == true) {
+                            usernameDuplicate = false;
+                            return 'Username already in use!';
+                          }
+                          return null;
+                        }),
+                    padding: const EdgeInsets.symmetric(horizontal: 50),
+                    alignment: Alignment.center,
+                  ),
+                  Container(
+                    child: TextFormField(
+                      controller: emailController,
+                      style: GoogleFonts.robotoCondensed(
+                          fontSize: 16.0, fontWeight: FontWeight.normal),
+                      decoration: const InputDecoration(
+                        labelText: 'Email Address',
+                        hintText: 'Enter your email address here...',
+                      ),
+                      validator: (email) {
+                        RegExp regex = RegExp(
+                            r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
+                        if (email!.isEmpty) {
+                          return 'Please enter your email address!';
+                        } else if (!regex.hasMatch(email)) {
+                          return 'Invalid email format!';
+                        }
+                        return null;
+                      },
+                    ),
+                    padding: const EdgeInsets.symmetric(horizontal: 50),
+                    alignment: Alignment.center,
+                  ),
+                  Container(
+                    child: TextFormField(
+                      controller: passwordController,
+                      style: GoogleFonts.robotoCondensed(
+                          fontSize: 16.0, fontWeight: FontWeight.normal),
+                      decoration: const InputDecoration(
+                        labelText: 'Password',
+                        hintText: 'Enter your password here...',
+                      ),
+                      obscureText: true,
+                      validator: (password) {
+                        if (password!.isEmpty) {
+                          return 'Please enter a password!';
+                        } else if (password.length > 7) {
+                          return 'Please enter more than 7 characters!';
+                        }
+                        return null;
+                      },
+                    ),
+                    padding: const EdgeInsets.symmetric(horizontal: 50),
+                    alignment: Alignment.center,
+                  ),
+                  Container(
+                    child: TextFormField(
+                      controller: confirmpwController,
+                      style: GoogleFonts.robotoCondensed(
+                          fontSize: 16.0, fontWeight: FontWeight.normal),
+                      decoration: const InputDecoration(
+                        labelText: 'Confirm Password',
+                        hintText: 'Re-enter your password here...',
+                      ),
+                      obscureText: true,
+                      validator: (confirm) {
+                        if (confirm != passwordController.text) {
+                          return 'Your password doesn\'t match!';
+                        }
+                        return null;
+                      },
+                    ),
+                    padding: const EdgeInsets.symmetric(horizontal: 50),
+                    alignment: Alignment.center,
+                  ),
+                  ElevatedButton(
+                      onPressed: () {
+                        FocusScope.of(context).unfocus();
+                        if (formKey.currentState!.validate()) {
+                          _onCreate(context);
+                        }
+                      },
+                      child: Text(
+                        "Create Account",
+                        style: GoogleFonts.robotoCondensed(
+                            fontSize: 16, fontWeight: FontWeight.normal),
+                      ))
+                ]),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              Text(
+                "Have an account? Have a KitKat!",
                 style: GoogleFonts.robotoCondensed(
-                  fontSize: 50.0,
-                  fontWeight: FontWeight.w700,
+                    fontSize: 12.0, fontWeight: FontWeight.normal),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: const Text(
+                  "Login",
+                  style: TextStyle(
+                      fontSize: 12.0,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: "Roboto"),
                 ),
               ),
-              padding: const EdgeInsets.symmetric(vertical: 50),
-              alignment: Alignment.center,
-            ),
-            Form(
-              key: formKey,
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.max,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Container(
-                      child: TextFormField(
-                          controller: usernameController,
-                          style: GoogleFonts.robotoCondensed(
-                              fontSize: 16.0, fontWeight: FontWeight.normal),
-                          decoration: const InputDecoration(
-                            labelText: 'Username',
-                            hintText: 'Enter your username here...',
-                          ),
-                          validator: (username) {
-                            if (username!.length < 8) {
-                              return 'Username must be more than 7 character!';
-                            } else if (usernameDuplicate == true) {
-                              usernameDuplicate = false;
-                              return 'Username already in use!';
-                            }
-                            return null;
-                          }),
-                      padding: const EdgeInsets.symmetric(horizontal: 50),
-                      alignment: Alignment.center,
-                    ),
-                    Container(
-                      child: TextFormField(
-                        controller: emailController,
-                        style: GoogleFonts.robotoCondensed(
-                            fontSize: 16.0, fontWeight: FontWeight.normal),
-                        decoration: const InputDecoration(
-                          labelText: 'Email Address',
-                          hintText: 'Enter your email address here...',
-                        ),
-                        validator: (email) {
-                          RegExp regex = RegExp(
-                              r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
-                          if (email!.isEmpty) {
-                            return 'Please enter your email address!';
-                          } else if (!regex.hasMatch(email)) {
-                            return 'Invalid email format!';
-                          }
-                          return null;
-                        },
-                      ),
-                      padding: const EdgeInsets.symmetric(horizontal: 50),
-                      alignment: Alignment.center,
-                    ),
-                    Container(
-                      child: TextFormField(
-                        controller: passwordController,
-                        style: GoogleFonts.robotoCondensed(
-                            fontSize: 16.0, fontWeight: FontWeight.normal),
-                        decoration: const InputDecoration(
-                          labelText: 'Password',
-                          hintText: 'Enter your password here...',
-                        ),
-                        obscureText: true,
-                        validator: (password) {
-                          if (password!.isEmpty) {
-                            return 'Please enter a password!';
-                          }
-                          // passwordController.text = password;
-                          return null;
-                        },
-                      ),
-                      padding: const EdgeInsets.symmetric(horizontal: 50),
-                      alignment: Alignment.center,
-                    ),
-                    Container(
-                      child: TextFormField(
-                        controller: confirmpwController,
-                        style: GoogleFonts.robotoCondensed(
-                            fontSize: 16.0, fontWeight: FontWeight.normal),
-                        decoration: const InputDecoration(
-                          labelText: 'Confirm Password',
-                          hintText: 'Re-enter your password here...',
-                        ),
-                        obscureText: true,
-                        validator: (confirm) {
-                          if (confirm != passwordController.text) {
-                            return 'Your password doesn\'t match!';
-                          }
-                          return null;
-                        },
-                      ),
-                      padding: const EdgeInsets.symmetric(horizontal: 50),
-                      alignment: Alignment.center,
-                    ),
-                    ElevatedButton(
-                        onPressed: () {
-                          FocusScope.of(context).unfocus();
-                          if (formKey.currentState!.validate()) {
-                            _onCreate(context);
-                          }
-                        },
-                        child: Text(
-                          "Create Account",
-                          style: GoogleFonts.robotoCondensed(
-                              fontSize: 16, fontWeight: FontWeight.normal),
-                        ))
-                  ]),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                Text(
-                  "Don't have an account yet?",
-                  style: GoogleFonts.robotoCondensed(
-                      fontSize: 12.0,
-                      color: const Color(0xFF000000),
-                      fontWeight: FontWeight.normal),
-                ),
-                TextButton(
-                    key: null,
-                    onPressed: buttonPressed,
-                    child: const Text(
-                      "Login",
-                      style: TextStyle(
-                          fontSize: 12.0,
-                          fontWeight: FontWeight.bold,
-                          fontFamily: "Roboto"),
-                    ))
-              ],
-            )
-          ]),
+            ],
+          )
+        ],
+      ),
     );
   }
-
-  void buttonPressed() {}
 }

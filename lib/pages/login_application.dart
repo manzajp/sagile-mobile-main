@@ -168,7 +168,9 @@ class _LoginWidgetState extends State<LoginWidget> {
                     ),
                     TextButton(
                         key: null,
-                        onPressed: buttonPressed,
+                        onPressed: () {
+                          Navigator.pushNamed(context, '/register');
+                        },
                         child: const Text(
                           "Register",
                           style: TextStyle(
@@ -181,6 +183,4 @@ class _LoginWidgetState extends State<LoginWidget> {
       ),
     );
   }
-
-  void buttonPressed() {}
 }
