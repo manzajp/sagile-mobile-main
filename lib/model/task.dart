@@ -2,6 +2,7 @@ class Task {
   int id, statusId, userId;
   String taskName, taskDescription;
   bool completeCheck;
+  DateTime date;
 
   Task({
     required this.id,
@@ -10,6 +11,7 @@ class Task {
     required this.taskName,
     required this.taskDescription,
     required this.completeCheck,
+    required this.date,
   });
 
   factory Task.fromJson(Map<String, dynamic> json) {
@@ -20,6 +22,7 @@ class Task {
       taskName: json['taskName'],
       taskDescription: json['taskDescription'],
       completeCheck: json['completeCheck'],
+      date: json['date'],
     );
   }
 
@@ -30,5 +33,6 @@ class Task {
         'taskName': taskName,
         'taskDescription': taskDescription,
         'completeCheck': completeCheck,
+        'date': date,
       };
 }

@@ -3,10 +3,12 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
+import 'package:sagile_mobile_main/model/task.dart';
 import '../static.dart';
 
 class EditTaskWidget extends StatefulWidget {
-  const EditTaskWidget({Key? key}) : super(key: key);
+  final Task task;
+  const EditTaskWidget({Key? key, required this.task}) : super(key: key);
   @override
   _EditTaskWidgetState createState() => _EditTaskWidgetState();
 }
@@ -25,33 +27,18 @@ class _EditTaskWidgetState extends State<EditTaskWidget> {
 
   Future _editTask() async{
     try {
-      final res = await http.post(
-        Uri.parse("${Env.URL_PREFIX}/task/details.php"),
+      await http.post(
+        Uri.parse("${Env.URL_PREFIX}/task/update.php"),
         body: {
+          "id": widget.task.id,
           "taskName": taskNameController.text,
-          "taskDesc": taskDescController.text,
+          "taskDescription": taskDescController.text,
+          "statusId": dropdownValue,
+          "date": taskDate,
         },
       );
-      var result = json.decode(res.body)['result'];
-
-      if(result == true){
-        setState((){
-          formKey.currentState!.validate();
-        });
-
-        await http.post(
-          Uri.parse("${Env.URL_PREFIX}/task/create.php"),
-          body: {
-            "taskName": taskNameController.text,
-            "taskDesc": taskDescController.text,
-          },
-        );
-        print('task updated');
+      print('task updated');
         Navigator.pop(context);
-      }else{
-        //
-      }
-      print("received respond!");
     } on Exception catch (e) {
       // TODO
       print('server not found');
@@ -103,15 +90,21 @@ class _EditTaskWidgetState extends State<EditTaskWidget> {
                                     fontSize: 16.0,
                                     fontWeight: FontWeight.normal),
                               ),
-                              TextFormField(initialValue: "#"),
-                              TextField(
+                              TextFormField(
                                 controller: taskNameController,
+                                initialValue: "#",
                                 style: GoogleFonts.robotoCondensed(
                                     fontSize: 16.0,
                                     fontWeight: FontWeight.normal),
                                 decoration: const InputDecoration(
                                   hintText: 'e.g. Sprint Planning Week 1',
                                 ),
+                                validator: (taskName) {
+                                if (taskName!.isEmpty) {
+                                  return 'Please enter a task name!';
+                                }
+                                return null;
+                              },
                               ),
                             ],
                           ),
@@ -127,9 +120,9 @@ class _EditTaskWidgetState extends State<EditTaskWidget> {
                                     fontSize: 16.0,
                                     fontWeight: FontWeight.normal),
                               ),
-                              TextFormField(initialValue: "#"),
-                              TextField(
+                              TextFormField(
                                 controller: taskDescController,
+                                initialValue: "#",
                                 maxLines: 3,
                                 style: GoogleFonts.robotoCondensed(
                                     fontSize: 16.0,
@@ -191,7 +184,7 @@ class _EditTaskWidgetState extends State<EditTaskWidget> {
                                   onPressed: () {
                                     showDatePicker(
                                       context: context,
-                                      initialDate: DateTime.now(),
+                                      initialDate: taskDate,
                                       firstDate: DateTime(2000),
                                       lastDate: DateTime(2025),
                                     );
