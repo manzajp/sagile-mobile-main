@@ -25,7 +25,6 @@ class _LoginWidgetState extends State<LoginWidget> {
         Uri.parse("${Env.URL_PREFIX}/users/details.php"),
         body: {
           "username": usernameController.text,
-          "password": passwordController.text,
         },
       );
       var result = json.decode(res.body)['result'];

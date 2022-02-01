@@ -93,22 +93,23 @@ class _TaskCreateWidgetState extends State<TaskCreateWidget> {
                                 fontSize: 16.0, fontWeight: FontWeight.normal),
                           ),
                           TextButton(
-                              onPressed: () async {
-                                final DateTime? picked = await showDatePicker(
-                                  context: context,
-                                  initialDate: taskDate, // Refer step 1
-                                  firstDate: DateTime(2000),
-                                  lastDate: DateTime(2025),
-                                );
-                                if (picked != null && picked != taskDate) {
-                                  setState(() {
-                                    taskDate = picked;
-                                  });
-                                }
-                              },
-                              child: Text("${taskDate.day}/"
-                                  "${taskDate.month}"
-                                  "/${taskDate.year}")),
+                            onPressed: () async {
+                              final DateTime? picked = await showDatePicker(
+                                context: context,
+                                initialDate: taskDate, // Refer step 1
+                                firstDate: DateTime(2000),
+                                lastDate: DateTime(2025),
+                              );
+                              if (picked != null && picked != taskDate) {
+                                setState(() {
+                                  taskDate = picked;
+                                });
+                              }
+                            },
+                            child: Text("${taskDate.day}/"
+                                "${taskDate.month}"
+                                "/${taskDate.year}"),
+                          ),
                         ],
                       ),
                     ),
