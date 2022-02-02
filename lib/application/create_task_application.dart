@@ -1,15 +1,76 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:http/http.dart' as http;
+import 'package:sagile_mobile_main/application/view_task_application.dart';
+import 'package:sagile_mobile_main/model/task.dart';
+import 'package:sagile_mobile_main/model/user.dart';
+
+import '../static.dart';
 
 class TaskCreateWidget extends StatefulWidget {
-  const TaskCreateWidget({Key? key}) : super(key: key);
+  const TaskCreateWidget(
+      {Key? key, required this.curUser, required this.status})
+      : super(key: key);
+  final User curUser;
+  final List<String> status;
+
   @override
   _TaskCreateWidgetState createState() => _TaskCreateWidgetState();
 }
 
 class _TaskCreateWidgetState extends State<TaskCreateWidget> {
-  bool notifyUpdate = false;
+  Future _createTask(Task task) async {
+    try {
+      var res = await http.post(
+        Uri.parse("${Env.URL_PREFIX}/tasks/create.php"),
+        body: {
+          'statusId': task.statusId.toString(),
+          'userId': task.userId.toString(),
+          'name': task.name,
+          'description': task.description,
+          'completed': task.completed == false ? "0" : "1",
+          'date': task.date.toString(),
+        },
+      );
+      var result = json.decode(res.body)['result'];
+
+      if (result == false) {
+        print("no update");
+      } else {
+        print("yes update");
+        res = await http.post(
+          Uri.parse("${Env.URL_PREFIX}/tasks/list.php"),
+        );
+        var result = json.decode(res.body)['result'];
+        List<Task> tasks =
+            (result as List).map((data) => Task.fromJson(data)).toList();
+
+        Navigator.of(context).popUntil(ModalRoute.withName('/login'));
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) =>
+                TaskViewWidget(tasks: tasks, curUser: widget.curUser),
+          ),
+        );
+      }
+      print("received respond!");
+    } on Exception catch (e) {
+      print(e);
+    }
+  }
+
+  void _onCreate(Task task) async {
+    await _createTask(task);
+  }
+
   DateTime taskDate = DateTime.now();
+  late String stringDropdownValue = widget.status.first;
+  int dropdownValue = 1;
+  final formKey = GlobalKey<FormState>();
+  TextEditingController taskNameController = TextEditingController();
+  TextEditingController taskDescController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +80,7 @@ class _TaskCreateWidgetState extends State<TaskCreateWidget> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.of(context).pop();
           },
         ),
       ),
@@ -34,6 +95,7 @@ class _TaskCreateWidgetState extends State<TaskCreateWidget> {
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 50),
               child: Form(
+                key: formKey,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   mainAxisSize: MainAxisSize.max,
@@ -49,12 +111,19 @@ class _TaskCreateWidgetState extends State<TaskCreateWidget> {
                             style: GoogleFonts.robotoCondensed(
                                 fontSize: 16.0, fontWeight: FontWeight.normal),
                           ),
-                          TextField(
+                          TextFormField(
+                            controller: taskNameController,
                             style: GoogleFonts.robotoCondensed(
                                 fontSize: 16.0, fontWeight: FontWeight.normal),
                             decoration: const InputDecoration(
                               hintText: 'e.g. Sprint Planning Week 1',
                             ),
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return 'Please fill in the the title';
+                              }
+                              return null;
+                            },
                           ),
                         ],
                       ),
@@ -69,7 +138,8 @@ class _TaskCreateWidgetState extends State<TaskCreateWidget> {
                             style: GoogleFonts.robotoCondensed(
                                 fontSize: 16.0, fontWeight: FontWeight.normal),
                           ),
-                          TextField(
+                          TextFormField(
+                            controller: taskDescController,
                             maxLines: 3,
                             style: GoogleFonts.robotoCondensed(
                                 fontSize: 16.0, fontWeight: FontWeight.normal),
@@ -113,31 +183,22 @@ class _TaskCreateWidgetState extends State<TaskCreateWidget> {
                         ],
                       ),
                     ),
-                    // Container(
-                    //   padding: const EdgeInsets.only(bottom: 15),
-                    //   child: Row(
-                    //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    //     crossAxisAlignment: CrossAxisAlignment.center,
-                    //     children: [
-                    //       Text(
-                    //         "Notify all members on changes?",
-                    //         style: GoogleFonts.robotoCondensed(
-                    //             fontSize: 16.0,
-                    //             fontWeight: FontWeight.normal),
-                    //       ),
-                    //       Checkbox(
-                    //           value: notifyUpdate,
-                    //           onChanged: (value) {
-                    //             setState(() {
-                    //               notifyUpdate = value!;
-                    //             });
-                    //           }),
-                    //     ],
-                    //   ),
-                    // ),
                     ElevatedButton(
                       onPressed: () {
-                        Navigator.pop(context);
+                        Task task = Task(
+                          statusId: dropdownValue,
+                          userId: widget.curUser.id,
+                          name: taskNameController.text,
+                          description: taskDescController.text == ""
+                              ? ""
+                              : taskDescController.text,
+                          completed: false,
+                          date: taskDate,
+                        );
+                        if (formKey.currentState!.validate()) {
+                          print(task.date);
+                          _onCreate(task);
+                        }
                       },
                       child: Container(
                         padding: const EdgeInsets.symmetric(

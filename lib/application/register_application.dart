@@ -48,7 +48,7 @@ class _RegisterWidgetState extends State<RegisterWidget> {
           },
         );
         print('haha acc go brr brr');
-        Navigator.pop(context);
+        Navigator.of(context).pop();
       } else {
         setState(() {
           usernameDuplicate = true;
@@ -153,7 +153,7 @@ class _RegisterWidgetState extends State<RegisterWidget> {
                       validator: (password) {
                         if (password!.isEmpty) {
                           return 'Please enter a password!';
-                        } else if (password.length > 7) {
+                        } else if (password.length < 7) {
                           return 'Please enter more than 7 characters!';
                         }
                         return null;
@@ -207,7 +207,7 @@ class _RegisterWidgetState extends State<RegisterWidget> {
               ),
               TextButton(
                 onPressed: () {
-                  Navigator.pop(context);
+                  Navigator.of(context).pop();
                 },
                 child: const Text(
                   "Login",

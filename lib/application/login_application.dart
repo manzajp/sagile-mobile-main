@@ -1,8 +1,11 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
+import 'package:sagile_mobile_main/application/register_application.dart';
+import 'package:sagile_mobile_main/application/view_task_application.dart';
+import 'package:sagile_mobile_main/model/task.dart';
+import 'package:sagile_mobile_main/model/user.dart';
 import '../static.dart';
 
 class LoginWidget extends StatefulWidget {
@@ -21,14 +24,14 @@ class _LoginWidgetState extends State<LoginWidget> {
 
   Future _detailsUser() async {
     try {
-      final res = await http.post(
+      var res = await http.post(
         Uri.parse("${Env.URL_PREFIX}/users/details.php"),
         body: {
           "username": usernameController.text,
         },
       );
-      var result = json.decode(res.body)['result'];
-      print(result);
+      Map<String, dynamic> result = json.decode(res.body)['result'];
+      User curUser = User.fromJson(result);
 
       if (result == false) {
         setState(() {
@@ -43,7 +46,23 @@ class _LoginWidgetState extends State<LoginWidget> {
             formKey.currentState!.validate();
           });
           print('bruh da login tahniah');
-          Navigator.pop(context);
+
+          res = await http.post(
+            Uri.parse("${Env.URL_PREFIX}/tasks/list.php"),
+          );
+          var result = json.decode(res.body)['result'];
+          List<Task> tasks =
+              (result as List).map((data) => Task.fromJson(data)).toList();
+
+          tasks.forEach((task) {
+            print(task.name);
+          });
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) =>
+                  TaskViewWidget(tasks: tasks, curUser: curUser),
+            ),
+          );
         } else {
           wrongPassword = true;
           setState(() {
@@ -168,7 +187,10 @@ class _LoginWidgetState extends State<LoginWidget> {
                     TextButton(
                         key: null,
                         onPressed: () {
-                          Navigator.pushNamed(context, '/register');
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                                builder: (context) => const RegisterWidget()),
+                          );
                         },
                         child: const Text(
                           "Register",
