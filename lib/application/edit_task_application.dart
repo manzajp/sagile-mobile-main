@@ -3,14 +3,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
-<<<<<<< Updated upstream:lib/pages/edit_task_application.dart
-import 'package:sagile_mobile_main/model/task.dart';
-import '../static.dart';
-
-class EditTaskWidget extends StatefulWidget {
-  final Task task;
-  const EditTaskWidget({Key? key, required this.task}) : super(key: key);
-=======
 import 'package:sagile_mobile_main/application/view_task_application.dart';
 import 'package:sagile_mobile_main/model/task.dart';
 import 'package:sagile_mobile_main/model/user.dart';
@@ -27,7 +19,6 @@ class EditTaskWidget extends StatefulWidget {
   final List<String> status;
   final Task curTask;
 
->>>>>>> Stashed changes:lib/application/edit_task_application.dart
   @override
   _EditTaskWidgetState createState() => _EditTaskWidgetState();
 }
@@ -35,20 +26,6 @@ class EditTaskWidget extends StatefulWidget {
 class _EditTaskWidgetState extends State<EditTaskWidget> {
   Future _editTask(Task task) async {
     try {
-<<<<<<< Updated upstream:lib/pages/edit_task_application.dart
-      await http.post(
-        Uri.parse("${Env.URL_PREFIX}/task/update.php"),
-        body: {
-          "id": widget.task.id,
-          "taskName": taskNameController.text,
-          "taskDescription": taskDescController.text,
-          "statusId": dropdownValue,
-          "date": taskDate,
-        },
-      );
-      print('task updated');
-        Navigator.pop(context);
-=======
       var res = await http.post(
         Uri.parse("${Env.URL_PREFIX}/tasks/update.php"),
         body: {
@@ -83,7 +60,6 @@ class _EditTaskWidgetState extends State<EditTaskWidget> {
         );
       }
       print("received respond!");
->>>>>>> Stashed changes:lib/application/edit_task_application.dart
     } on Exception catch (e) {
       print(e);
     }
@@ -96,6 +72,7 @@ class _EditTaskWidgetState extends State<EditTaskWidget> {
   DateTime taskDate = DateUtils.dateOnly(DateTime.now());
   final formKey = GlobalKey<FormState>();
   late List<String> status;
+  late String stringDropdownValue;
   int dropdownValue = 1;
 
   TextEditingController taskNameController = TextEditingController();
@@ -108,39 +85,24 @@ class _EditTaskWidgetState extends State<EditTaskWidget> {
     taskDescController =
         TextEditingController(text: widget.curTask.description);
     status = widget.status;
-    // dropdownValue = widget.curTask.statusId;
-    // switch (dropdownValue) {
-    //   case 1:
-    //     stringDropdownValue = status[0];
-    //     break;
-    //   case 2:
-    //     stringDropdownValue = status[1];
-    //     break;
-    //   case 3:
-    //     stringDropdownValue = status[2];
-    //     break;
-    // }
+    dropdownValue = widget.curTask.statusId;
+    switch (dropdownValue) {
+      case 1:
+        stringDropdownValue = status[0];
+        break;
+      case 2:
+        stringDropdownValue = status[1];
+        break;
+      case 3:
+        stringDropdownValue = status[2];
+        break;
+    }
 
     taskDate = widget.curTask.date;
   }
 
   @override
   Widget build(BuildContext context) {
-    // String stringDropdownValue = ;
-    // int dropdownValue = 1;
-    // dropdownValue = widget.curTask.statusId;
-    // switch (dropdownValue) {
-    //   case 1:
-    //     stringDropdownValue = status[0];
-    //     break;
-    //   case 2:
-    //     stringDropdownValue = status[1];
-    //     break;
-    //   case 3:
-    //     stringDropdownValue = status[2];
-    //     break;
-    // }
-
     return Scaffold(
       appBar: AppBar(
         title: const Text("Edit Task"),
@@ -189,21 +151,12 @@ class _EditTaskWidgetState extends State<EditTaskWidget> {
                                 decoration: const InputDecoration(
                                   hintText: 'e.g. Sprint Planning Week 1',
                                 ),
-<<<<<<< Updated upstream:lib/pages/edit_task_application.dart
-                                validator: (taskName) {
-                                if (taskName!.isEmpty) {
-                                  return 'Please enter a task name!';
-                                }
-                                return null;
-                              },
-=======
                                 validator: (value) {
                                   if (value!.isEmpty) {
                                     return 'Please fill in the the title';
                                   }
                                   return null;
                                 },
->>>>>>> Stashed changes:lib/application/edit_task_application.dart
                               ),
                             ],
                           ),
@@ -234,40 +187,31 @@ class _EditTaskWidgetState extends State<EditTaskWidget> {
                             ],
                           ),
                         ),
-                        // Container(
-                        //   padding: const EdgeInsets.only(bottom: 15),
-                        //   child: Column(
-                        //     crossAxisAlignment: CrossAxisAlignment.start,
-                        //     children: [
-                        //       DropdownButton<String>(
-                        //         value: stringDropdownValue,
-                        //         onChanged: (String? newValue) {
-                        //           setState(() {
-                        //             stringDropdownValue = newValue!;
-                        //             switch (stringDropdownValue) {
-                        //               case 'To-do':
-                        //                 dropdownValue = 1;
-                        //                 break;
-                        //               case 'On-going':
-                        //                 dropdownValue = 2;
-                        //                 break;
-                        //               case 'Done':
-                        //                 dropdownValue = 3;
-                        //                 break;
-                        //             }
-                        //           });
-                        //         },
-                        //         items: status.map<DropdownMenuItem<String>>(
-                        //             (String value) {
-                        //           return DropdownMenuItem<String>(
-                        //             value: value,
-                        //             child: Text(value),
-                        //           );
-                        //         }).toList(),
-                        //       ),
-                        //     ],
-                        //   ),
-                        // ),
+                        Container(
+                          padding: const EdgeInsets.only(bottom: 15),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              DropdownButton<String>(
+                                value: stringDropdownValue,
+                                onChanged: (String? newValue) {
+                                  setState(() {
+                                    stringDropdownValue = newValue!;
+                                    dropdownValue =
+                                        status.indexOf(stringDropdownValue);
+                                  });
+                                },
+                                items: status.map<DropdownMenuItem<String>>(
+                                    (String value) {
+                                  return DropdownMenuItem<String>(
+                                    value: value,
+                                    child: Text(value),
+                                  );
+                                }).toList(),
+                              ),
+                            ],
+                          ),
+                        ),
                         Container(
                           padding: const EdgeInsets.only(bottom: 15),
                           child: Row(
@@ -281,19 +225,6 @@ class _EditTaskWidgetState extends State<EditTaskWidget> {
                                     fontWeight: FontWeight.normal),
                               ),
                               TextButton(
-<<<<<<< Updated upstream:lib/pages/edit_task_application.dart
-                                  onPressed: () {
-                                    showDatePicker(
-                                      context: context,
-                                      initialDate: taskDate,
-                                      firstDate: DateTime(2000),
-                                      lastDate: DateTime(2025),
-                                    );
-                                  },
-                                  child: Text("${taskDate.day}/"
-                                      "${taskDate.month}"
-                                      "/${taskDate.year}")),
-=======
                                 onPressed: () async {
                                   final DateTime? picked = await showDatePicker(
                                     context: context,
@@ -311,7 +242,6 @@ class _EditTaskWidgetState extends State<EditTaskWidget> {
                                     "${taskDate.month}"
                                     "/${taskDate.year}"),
                               ),
->>>>>>> Stashed changes:lib/application/edit_task_application.dart
                             ],
                           ),
                         ),
